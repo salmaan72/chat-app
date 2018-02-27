@@ -1,0 +1,20 @@
+.userbox {
+  height:400px;
+  width:300px;
+  background-color:bisque;
+  margin-top: 20px;
+  display:inline-block;
+}
+.head {
+  height:50px;
+  width: inherit;
+  background-color: cornflowerblue;
+}
+.msgbox {
+  height:400px;
+  width:600px;
+  display: inline-block;
+  background-color: bisque;
+  margin-top: 20px;
+  margin-left: 40px;
+}

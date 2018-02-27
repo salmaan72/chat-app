@@ -1,0 +1,25 @@
+{
+  "name": "chat",
+  "version": "1.0.0",
+  "description": "A simple chat app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "socket.io"
+  ],
+  "author": "Salmaan",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "jade": "^1.11.0",
+    "json-cookie": "^1.0.0",
+    "jsonwebtoken": "^8.1.1",
+    "mongoose": "^5.0.6",
+    "nodemon": "^1.15.1",
+    "socket.io": "^2.0.4"
+  }
+}

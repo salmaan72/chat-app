@@ -1,0 +1,12 @@
+extends base
+
+block head
+  title signup
+block content
+  form(action='/chat/signup' method='post')
+    input(type='text', name='firstname', placeholder='first name')
+    input(type='text', name='lastname', placeholder='last name')
+    input(type='text', name='username', placeholder='username')
+    input(type='password', name='password', placeholder='password')
+    input(type='password', name='confirm', placeholder='confirm password')
+    button(type='submit') signup

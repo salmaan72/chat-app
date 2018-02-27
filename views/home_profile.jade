@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css', integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm', crossorigin='anonymous') 
+    link(href='http://localhost:3000/css/home_profile.css', type='text/css', rel='stylesheet')
+    title Home Profile
+    script(src='/socket.io/socket.io.js')
+    script.
+      var socket = io();
+    
+  body
+    form(action='http://localhost:3000/chat/logout', method='post', style='float:right')
+      button.btn.btn-primary logout
+    .container
+      h3 welcome #{locals.name}
+      .userbox
+        .head
+          h4 users online
+      .msgbox
+        .head
+          h4 Messages
+      .input-group.mb-3(style='margin-top: 15px')
+        input.form-control(type='text', placeholder='enter message', aria-label="Recipient's username", aria-describedby='basic-addon2')
+        .input-group-append
+          button.btn.btn-outline-secondary(type='button') send
+  
+  

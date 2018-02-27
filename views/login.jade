@@ -1,0 +1,9 @@
+extends base
+
+block head
+  title Login
+block content    
+  form(action='/chat/login', method='post')
+    input(type='text', name='username', placeholder='username')
+    input(type='password', name='password', placeholder='password')
+    button(type='submit') login
