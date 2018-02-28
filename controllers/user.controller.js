@@ -7,6 +7,14 @@ const config = require('./../libs/config');
 const verifyToken = require('./../libs/verifyToken');
 const splitCookies = require('./../libs/splitCookies');
 
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
+
 let userController = {};
 
 userController.login = function(req, res){
@@ -28,6 +36,9 @@ userController.login = function(req, res){
           name: foundUser.firstname+' '+foundUser.lastname
         }
         res.cookie('token',token,{ httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+        //io.on('connection', function(socket){
+        //eventEmitter.emit('save socket',foundUser.username);
+        //});
         res.redirect('/chat/profile');
       });
     }
@@ -53,8 +64,7 @@ userController.logout = function(req,res){
   verifyToken.verifyUserToken(token,res,function(authData){
     res.clearCookie('token',{path:'/'});
     res.clearCookie('io',{path:'/'});
-    let response = responseGenerator.respGen(false,'successfully logged out',200,null);
-    res.send(response);
+    res.redirect('/chat/login');
   });
 }
 

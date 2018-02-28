@@ -1,20 +1,10 @@
-.userbox {
-  height:400px;
-  width:300px;
-  background-color:bisque;
-  margin-top: 20px;
-  display:inline-block;
+body{
+  margin-top:30px;
 }
-.head {
-  height:50px;
-  width: inherit;
-  background-color: cornflowerblue;
-}
-.msgbox {
+#chat{
   height:400px;
-  width:600px;
-  display: inline-block;
-  background-color: bisque;
-  margin-top: 20px;
-  margin-left: 40px;
+  background-color:#CFD8DC;
+  overflow-y: scroll;
+  overflow-x:scroll;
+  padding: 12px;
 }
