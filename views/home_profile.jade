@@ -12,11 +12,15 @@ html
       form(action='http://localhost:3000/chat/logout', method='post', style='float:right')
         button.btn.btn-primary(type='submit') Logout
       .row
-        .col-md-4
-          .well
-            h5 Online Users
+        .col-md-4.onlineusers-div
+            #onlineusers-title
+              h5 Online Users
             ul#users.list-group
+        
         .col-md-8
+          #recepient.row
+            p#recepient-p
+            p#typing.typing
           #chat.chat
           form#messageForm
             .form-group
@@ -32,16 +36,8 @@ html
         var $username = '#{locals.name}';
         var $users = $('#users');
         
-        var onlineUsers = [];
-        
         socket.emit('new user', $username);
         
-        $messageForm.submit(function(e){
-          e.preventDefault();
-          //console.log('submitted');
-          socket.emit('send message', $message.val());
-          $message.val('');
-        });
         socket.on('new message', function(data){
           $chat.append('<div class="well"><strong>'+data.user+': '+'</strong>'+data.msg+'</div>');
         });
@@ -50,9 +46,50 @@ html
           var html = '';
           for(let i=0;i<data.length;i++){
             if(data[i] !== $username){
-              html += '<li class="list-group-item">'+data[i]+'</li>';
+              html += '<li class="list-group-item" id="click-onlineuser">'+data[i]+'</li>';
             }
           }
           $users.html(html);
         });
+        
+        //- $('#click-onlineuser').click(function(){
+        //-    //$('#recepient-p').text($('#click-onlineuser').text());
+        //-    //socket.emit('join one2one', $('#click-onlineuser').text());
+        //-    alert($('#click-onlineuser').text());
+        //-  });
+
+        $('#users').on('click','li',function(){
+          $('#recepient-p').text($(this).text());
+          socket.emit('join one2one', $(this).text());
+          // on keyup
+          $('input').keyup(function(){
+            socket.emit('key', $('#recepient-p').text(), $username, 'up');
+          });
+          $('input').keydown(function(){
+            socket.emit('key', $('#recepient-p').text(), $username, 'down');
+          })
+        });
+
+        socket.on('typing', function(touser, from, status){
+          if($('#recepient-p').text() === from){
+            if(status === 'down'){
+              $('#typing').text('typing...');
+            }
+            else if(status === 'up'){
+              setTimeout(function(){
+                $('#typing').text('');
+              },1000);
+              
+            }
+          }
+        });
+        
+        $messageForm.submit(function(e){
+          e.preventDefault();
+          //console.log('submitted');
+          socket.emit('send message', $message.val());
+          $message.val('');
+        });
+
+       
       });

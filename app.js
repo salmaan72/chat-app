@@ -35,31 +35,63 @@ let users = [];
 let connections = [];
 
 io.sockets.on('connection', function(socket){
-  connections.push(socket);
-  console.log('connected: %s sockets connected',connections.length);
+
+  // new user
+  socket.on('new user', function(username){
+    let flag = true;
+    for(let i in connections){
+      if(connections[i]['username'] === username){
+        flag = false;
+        return;
+      }
+    }
+    if(flag){
+      connections.push(socket);
+    }
+    //  console.log(socket);
+    //socket.join('one2one');
+    console.log('connected: %s sockets connected',connections.length);
+    socket.username = username;
+    users.push(socket.username);
+    //console.log(socket);
+    updateUsernames();
+  });
+
+  //join one2one room
+  var room;
+socket.on('join one2one', function(user){
+   for(let x in connections){
+     if(connections[x]['username'] === user){
+       room = socket.id+'and'+connections[x]['id'];
+       socket.join(room);
+       connections[x].join(room);
+       return;
+     }
+   }
+});
+
+// typing notification
+socket.on('key',function(touser,from, status){
+  socket.broadcast.to(room).emit('typing', touser, from, status);
+});
+
+  //send Messages
+  socket.on('send message', function(data){
+    io.sockets.to(room).emit('new message', {msg: data, user:socket.username});
+  });
+
+
+  function updateUsernames(){
+    io.sockets.emit('get users', users);
+  }
 
   //disconnect
   socket.on('disconnect', function(){
-    if(socket.username) return;
+    //if(socket.username) return;
     users.splice(users.indexOf(socket.username),1);
     updateUsernames();
     connections.splice(connections.indexOf(socket),1);
     console.log('Disconnected: %s sockets connected',connections.length);
   });
 
-  //send Messages
-  socket.on('send message', function(data){
-    io.sockets.emit('new message', {msg: data, user:socket.username});
-  });
-
-  // new user
-  socket.on('new user', function(data){
-    socket.username = data;
-    users.push(socket.username);
-    updateUsernames();
-  });
-
-  function updateUsernames(){
-    io.sockets.emit('get users', users);
-  }
 });

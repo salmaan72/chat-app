@@ -8,3 +8,28 @@ body{
   overflow-x:scroll;
   padding: 12px;
 }
+#recepient{
+  height:40px;
+  background-color:burlywood;
+  padding-left: 8px;
+  padding-top: 8px;
+}
+.onlineusers-div{
+  background-color: #B0BEC5;
+  height:400px;
+  overflow-x:hidden;
+  overflow-y:scroll;
+}
+#onlineusers-title{
+  height:40px;
+  background-color:#78909C;
+}
+#click-onlineuser{
+  cursor: pointer;
+}
+#recepient-p{
+  color: black;
+}
+.typing{
+  color: green;
+}
