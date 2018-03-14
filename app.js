@@ -9,6 +9,10 @@ const path = require('path');
 const routes = require('./routes');
 const mongoose = require('mongoose');
 const verifyToken = require('./libs/verifyToken');
+const msgModel = require('./models/msgs.model');
+
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
 
 mongoose.connect('mongodb://localhost/chatapp', function(){
   console.log('mongodb connected on default port');
@@ -58,11 +62,12 @@ io.sockets.on('connection', function(socket){
   });
 
   //join one2one room
-  var room;
+  var room, sendto;
 socket.on('join one2one', function(user){
    for(let x in connections){
      if(connections[x]['username'] === user){
        room = socket.id+'and'+connections[x]['id'];
+       sendto = connections[x]['username'];
        socket.join(room);
        connections[x].join(room);
        return;
@@ -76,10 +81,12 @@ socket.on('key',function(touser,from, status){
 });
 
   //send Messages
-  socket.on('send message', function(data){
-    io.sockets.to(room).emit('new message', {msg: data, user:socket.username});
+  socket.on('send message', function(msg, fromuser){
+    //console.log('2 times');
+    eventEmitter.emit('create msgs coll');
+    eventEmitter.emit('save to db', msg, fromuser, sendto);
+    io.sockets.to(room).emit('new message', {msg: msg, user:fromuser});
   });
-
 
   function updateUsernames(){
     io.sockets.emit('get users', users);
@@ -94,4 +101,39 @@ socket.on('key',function(touser,from, status){
     console.log('Disconnected: %s sockets connected',connections.length);
   });
 
+  socket.on('get texts', function(from, to){
+    msgModel.findOne({$or:[{'user1':from, 'user2':to}, {'user1':to, 'user2':from}]}, function(err, found){
+      if(found !== null && found !== undefined){
+        socket.emit('print msgs', found.msgs);
+      }
+    });
+  });
+});
+
+  // database operations
+ 
+  eventEmitter.on('save to db', function(msg, from, to){
+          msgModel.findOne({$or:[{'user1':from, 'user2':to}, {'user1':to, 'user2':from}]}, function(err,msgobj){
+            if(msgobj === null || msgobj === undefined){
+              let newmsg = new msgModel({
+                user1: from,
+                user2:to,
+                msgs:[from+': '+msg]
+              });
+              newmsg.save();
+              return;
+            }
+            else{
+              msgobj['msgs'].push(from+': '+msg);
+              msgobj.save();
+            }
+          });
+      
+    }); 
+
+
+
+eventEmitter.once('create msgs coll', function(){
+  let newcol = new msgModel();
+  newcol.save();
 });

@@ -24,9 +24,9 @@ html
           #chat.chat
           form#messageForm
             .form-group
-              input#message.form-control(type="text", placeholder="enter a message", style="margin-top:10px")
+              input#message.form-control(type="text", placeholder="Type a message", style="margin-top:10px")
               br
-              input.btn.btn-primary(type='submit', value='Send Message')
+              input.btn.btn-primary(type='submit', value='Send')
     script.
       $(function(){
         var socket = io();
@@ -39,7 +39,12 @@ html
         socket.emit('new user', $username);
         
         socket.on('new message', function(data){
-          $chat.append('<div class="well"><strong>'+data.user+': '+'</strong>'+data.msg+'</div>');
+          if($('#recepient-p').text() === data.user && data.user !== $username){
+            $chat.append('<div class="well"><strong>'+data.user+': '+'</strong>'+data.msg+'</div>');
+          }
+          if(data.user === $username){
+            $chat.append('<div class="well"><strong>'+data.user+': '+'</strong>'+data.msg+'</div>');
+          }
         });
         
         socket.on('get users', function(data){
@@ -51,16 +56,13 @@ html
           }
           $users.html(html);
         });
-        
-        //- $('#click-onlineuser').click(function(){
-        //-    //$('#recepient-p').text($('#click-onlineuser').text());
-        //-    //socket.emit('join one2one', $('#click-onlineuser').text());
-        //-    alert($('#click-onlineuser').text());
-        //-  });
 
         $('#users').on('click','li',function(){
           $('#recepient-p').text($(this).text());
+          $chat.empty();
           socket.emit('join one2one', $(this).text());
+          socket.emit('get texts', $username, $(this).text());
+
           // on keyup
           $('input').keyup(function(){
             socket.emit('key', $('#recepient-p').text(), $username, 'up');
@@ -87,9 +89,16 @@ html
         $messageForm.submit(function(e){
           e.preventDefault();
           //console.log('submitted');
-          socket.emit('send message', $message.val());
+          socket.emit('send message', $message.val(),$username);
           $message.val('');
         });
 
-       
+        socket.on('print msgs', function(msgs){
+          let msgarr = [];
+          for(let i=0; i<msgs.length; i++){
+            msgarr = msgs[i].split(':');
+            $chat.append('<div class="well"><strong>'+msgarr[0]+': '+'</strong>'+msgarr[1]+'</div>');
+          }
+        });
+        
       });
