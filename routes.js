@@ -6,6 +6,7 @@ const userController = require('./controllers/user.controller');
 const router = express.Router();
 const verifyToken = require('./libs/verifyToken');
 const splitCookies = require('./libs/splitCookies');
+const verifyPassword = require('./middleware/verifyPassword');
 
 routes.route('/login').get(function(req, res){
   if(req.headers.cookie !== undefined){
@@ -29,7 +30,7 @@ routes.route('/home').get(function(req,res){
 
 routes.route('/signup').get(function(req,res){
   res.render('signup');
-}).post(userController.signup);
+}).post(verifyPassword.confirmpass, userController.signup);
 
 routes.get('/profile', function(req,res){
   let token = splitCookies.cookieSplit(req.headers.cookie).token;

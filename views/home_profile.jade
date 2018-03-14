@@ -37,7 +37,7 @@ html
         var $users = $('#users');
         
         socket.emit('new user', $username);
-        
+        //sending message
         socket.on('new message', function(data){
           if($('#recepient-p').text() === data.user && data.user !== $username){
             $chat.append('<div class="well"><strong>'+data.user+': '+'</strong>'+data.msg+'</div>');
@@ -46,7 +46,7 @@ html
             $chat.append('<div class="well"><strong>'+data.user+': '+'</strong>'+data.msg+'</div>');
           }
         });
-        
+        // get the users online
         socket.on('get users', function(data){
           var html = '';
           for(let i=0;i<data.length;i++){
@@ -56,7 +56,7 @@ html
           }
           $users.html(html);
         });
-
+        // onclicking user
         $('#users').on('click','li',function(){
           $('#recepient-p').text($(this).text());
           $chat.empty();
@@ -71,7 +71,7 @@ html
             socket.emit('key', $('#recepient-p').text(), $username, 'down');
           })
         });
-
+        // typing notification
         socket.on('typing', function(touser, from, status){
           if($('#recepient-p').text() === from){
             if(status === 'down'){
@@ -85,14 +85,13 @@ html
             }
           }
         });
-        
+        // on submitting message form (on sending message)
         $messageForm.submit(function(e){
           e.preventDefault();
-          //console.log('submitted');
           socket.emit('send message', $message.val(),$username);
           $message.val('');
         });
-
+        // printing all the saved msgs when the user gets online again
         socket.on('print msgs', function(msgs){
           let msgarr = [];
           for(let i=0; i<msgs.length; i++){
