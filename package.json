@@ -1,5 +1,5 @@
 {
-  "name": "chat",
+  "name": "chat-app",
   "version": "1.0.0",
   "description": "A simple chat app",
   "main": "app.js",
@@ -8,14 +8,13 @@
   },
   "keywords": [
     "nodejs",
-    "socket.io"
+    "socket.io",
+    "chat"
   ],
   "author": "Salmaan",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "event": "^1.0.0",
-    "events": "^2.0.0",
     "express": "^4.16.2",
     "jade": "^1.11.0",
     "json-cookie": "^1.0.0",
