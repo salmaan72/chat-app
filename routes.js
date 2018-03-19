@@ -24,10 +24,6 @@ routes.route('/login').get(function(req, res){
 
 }).post(userController.login);
 
-routes.route('/home').get(function(req,res){
-  res.render('home');
-});
-
 routes.route('/signup').get(function(req,res){
   res.render('signup');
 }).post(verifyPassword.confirmpass, userController.signup);
