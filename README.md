@@ -19,16 +19,18 @@ As this is a backend development course, I haven't emphasized much on GUI. The s
 2. After login user will be directed to a page with url `localhost:3000/chat/profile`. which looks something like this:
 <img src="chat_1.png" align="center"/>  
 
-3. To start a conversation with a user click on the username below 'online users' tab.
+3. open incognito window and login with another username. Then both the loggedin users can see a user online under        'online users' tab.
+
+4. To start a conversation with a user click on the username below 'online users' tab.
 <img src="chat_2.png" align="center"/>  
 
-4. Then the username of the user to start a conversation with, appears on the top of the chat box.
+5. Then the username of the user to start a conversation with, appears on the top of the chat box.
 <img src="chat_3.png" align="center"/>  
 
-5. Typing notification: only the users in a conversation can see the other person typing.
+6. Typing notification: only the users in a conversation can see the other person typing.
 <img src="chat_11.png" align="center"/>  
 
-6. Features persistent storage:
+7. Features persistent storage:
 Try loggingout a user, login again and tap on the username under 'online users' tab, all the messages will be restored back on the chat box.
 
  
