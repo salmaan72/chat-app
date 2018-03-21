@@ -40,23 +40,30 @@ let connections = [];
 
 io.sockets.on('connection', function (socket) {
 
-  // new user
-  socket.on('new user', function (username) {
-    let flag = true;
-    for (let i in connections) {
-      if (connections[i]['username'] === username) {
-        flag = false;
-        return;
+    setInterval(function(){
+      updateUsernames();
+    },3000);
+
+    // new user
+    socket.on('new user', function (username) {
+      let flag = true;
+      if(connections.length > 0){
+        for (let i in connections) {
+          if (connections[i]['username'] === username) {
+            flag = false;
+            return;
+          }
+        }
       }
-    }
-    if (flag) {
-      connections.push(socket);
-    }
-    console.log('connected: %s sockets connected', connections.length);
-    socket.username = username;
-    users.push(socket.username);
-    updateUsernames();
-  });
+      if (flag) {
+        socket.username = username;
+        connections.push(socket);
+        users.push(socket.username);
+        console.log('connected: %s sockets connected', connections.length);
+        updateUsernames();
+      }
+
+    });
 
   //join one2one room
   var room, sendto;

@@ -4,10 +4,10 @@ block head
   title logout
 block content
   p still logged in. Logout the current profile to login
-  form(action='http://localhost:3000/chat/logout', method='post')
+  form(action='/chat/logout', method='post')
     button.btn.btn-primary logout
   br
   p or
   p
     | currently loggedin 
-    a(href='http://localhost:3000/chat/profile') profile
+    a(href='/chat/profile') profile
